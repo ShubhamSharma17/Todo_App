@@ -78,10 +78,38 @@ class _LoginScreenState extends State<LoginScreen> {
     log(userCredential.additionalUserInfo!.profile!["name"].toString());
     log(userCredential.additionalUserInfo!.profile!["email"].toString());
     // return userCredential;
+
+    // GoogleSignIn googleSignIn = GoogleSignIn();
+
+    // try {
+    //   var result = await googleSignIn.signIn();
+    //   final userData = await result!.authentication;
+    //   final credential = GoogleAuthProvider.credential(
+    //       accessToken: userData.accessToken, idToken: userData.idToken);
+    //   // if (userData) {
+    //   // log("while screen Change ");
+    //   Navigator.popUntil(context, (route) => route.isFirst);
+    //   Navigator.pushReplacement(
+    //       context,
+    //       MaterialPageRoute(
+    //         builder: (context) => HomeScreen(),
+    //       ));
+    //   // }
+    //   var finalResult =
+    //       await FirebaseAuth.instance.signInWithCredential(credential);
+
+    //   log("result $result");
+    //   log(result.displayName.toString());
+    //   log(result.email.toString());
+    //   log(result.photoUrl.toString());
+    // } catch (e) {
+    //   log("error $e");
+    // }
   }
 
   //function for google logout
-  signOut() {
+  signOut() async {
+    await GoogleSignIn().disconnect();
     FirebaseAuth.instance.signOut();
   }
 

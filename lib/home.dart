@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_constructors
+// ignore_for_file: prefer_const_constructors, use_build_context_synchronously
 
 import 'dart:developer';
 
@@ -6,6 +6,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 import 'screen/addList/add_list_screen.dart';
 import 'screen/authentication/login/login_with_gmail.dart';
@@ -34,16 +35,35 @@ class _HomeScreenState extends State<HomeScreen> {
             heroTag: null,
             elevation: 0,
             child: Icon(Icons.logout),
-            onPressed: () {
-              //log out
-              FirebaseAuth.instance.signOut();
-              log("Sign Out");
-              Navigator.popUntil(context, (route) => route.isFirst);
-              Navigator.pushReplacement(
-                  context,
-                  CupertinoPageRoute(
-                    builder: (context) => LoginScreen(),
-                  ));
+            //log out method
+            onPressed: () async {
+              log("Current user.....${FirebaseAuth.instance.currentUser}");
+              log("provider id ${FirebaseAuth.instance.currentUser!.providerData[0].providerId}");
+              String providerId =
+                  FirebaseAuth.instance.currentUser!.providerData[0].providerId;
+              //when user login with google
+              if (providerId == "google.com") {
+                await GoogleSignIn().disconnect();
+                FirebaseAuth.instance.signOut();
+                log("Sign Out from google");
+                Navigator.popUntil(context, (route) => route.isFirst);
+                Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => LoginScreen(),
+                    ));
+              }
+              //when user login with gmail
+              else {
+                FirebaseAuth.instance.signOut();
+                log("Sign Out from without google");
+                Navigator.popUntil(context, (route) => route.isFirst);
+                Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => LoginScreen(),
+                    ));
+              }
             },
           ),
         ]),
