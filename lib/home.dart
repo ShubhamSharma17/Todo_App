@@ -9,7 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 import 'screen/addList/add_list_screen.dart';
-import 'screen/authentication/login/login_with_gmail.dart';
+import 'screen/authentication/login/login_screen.dart';
 import 'screen/drawer/drawer.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -23,6 +23,46 @@ bool checkValue = false;
 
 class _HomeScreenState extends State<HomeScreen> {
   final userUniqueId = FirebaseAuth.instance.currentUser!.uid;
+
+  //save profile picture in firestore-database
+  saveProfilePic() async {
+    try {
+      // log("trying to get current data.... ${FirebaseAuth.instance.currentUser!.photoURL.toString()}");
+      QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+          .collection("profilePic $userUniqueId")
+          .get();
+      //get name and gmail from which user who login with gmail
+      DocumentSnapshot documentSnapshot = await FirebaseFirestore.instance
+          .collection("profilePic $userUniqueId")
+          .doc("profilePic")
+          .get();
+
+      //name
+      String userName = documentSnapshot.get("name").toString();
+      log("User name $userName");
+      //gmail
+      String userGmail = documentSnapshot.get("gmail").toString();
+      log("User gmail address $userGmail");
+
+      // log("Cheaking user data hai ki nhi..... ${""}");
+      if (querySnapshot.docs.isEmpty) {
+        String profilePicURL =
+            FirebaseAuth.instance.currentUser!.photoURL.toString();
+        FirebaseFirestore.instance
+            .collection("profilePic $userUniqueId")
+            .doc("profilePic")
+            .set({"profilePic": profilePicURL});
+      }
+    } on FirebaseException catch (error) {
+      log(error.code.toString());
+    }
+  }
+
+  @override
+  void initState() {
+    saveProfilePic();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {

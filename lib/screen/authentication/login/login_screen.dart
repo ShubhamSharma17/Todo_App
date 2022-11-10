@@ -71,8 +71,16 @@ class _LoginScreenState extends State<LoginScreen> {
             builder: (context) => HomeScreen(),
           ));
     }
+    log(userCredential.additionalUserInfo!.profile!.toString());
     log(userCredential.additionalUserInfo!.profile!["name"].toString());
     log(userCredential.additionalUserInfo!.profile!["email"].toString());
+    log(userCredential.additionalUserInfo!.profile!["picture"].toString());
+
+    // //save profile picture in farebase datastore
+    // try{
+
+    // }catch (e){}
+
     return userCredential;
   }
 
@@ -84,16 +92,19 @@ class _LoginScreenState extends State<LoginScreen> {
       // appBar: AppBar(title: Text("Login Screen")),
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.only(top: 50, left: 60, right: 60),
+          padding: const EdgeInsets.only(top: 50, left: 30, right: 30),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Text(
                     "WELCOME",
-                    style: TextStyle(fontSize: 50, fontWeight: FontWeight.bold),
+                    style: TextStyle(
+                      fontSize: 50,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                   Text(
                     "Please enter your details",
@@ -139,19 +150,20 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
               SizedBox(height: 30),
               Container(
-                padding: EdgeInsets.only(left: 20),
+                // padding: EdgeInsets.only(left: 20),
                 child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Container(
                       color: Colors.black,
                       height: 1,
-                      width: 100,
+                      width: MediaQuery.of(context).size.width * .4,
                     ),
                     Text("or"),
                     Container(
                       color: Colors.black,
                       height: 1,
-                      width: 100,
+                      width: MediaQuery.of(context).size.width * .4,
                     ),
                   ],
                 ),
@@ -175,6 +187,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   }),
               SizedBox(height: 20),
               Row(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text("Don't have an account?"),
                   TextButton(

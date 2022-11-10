@@ -9,7 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:todo_app/home.dart';
 import 'package:todo_app/screen/addList/add_list_screen.dart';
-import 'package:todo_app/screen/authentication/login/login_with_gmail.dart';
+import 'package:todo_app/screen/authentication/login/login_screen.dart';
 import 'package:uuid/uuid.dart';
 
 class DrawerScreen extends StatefulWidget {
@@ -21,9 +21,10 @@ class DrawerScreen extends StatefulWidget {
 
 class _DrawerScreenState extends State<DrawerScreen> {
   File? profilePic;
-  String userUniqueId = FirebaseAuth.instance.currentUser!.uid;
   String? profilePicShow;
+  String userUniqueId = FirebaseAuth.instance.currentUser!.uid;
 
+//function for store image
   storeAndShowPicture() async {
     XFile? selectedImage =
         await ImagePicker().pickImage(source: ImageSource.gallery);
@@ -43,10 +44,11 @@ class _DrawerScreenState extends State<DrawerScreen> {
       TaskSnapshot taskSnapshot = await uploadTask;
       String downloadUrl = await taskSnapshot.ref.getDownloadURL();
       log("Image selected!");
+      log(userUniqueId.toString());
       log(downloadUrl.toString());
 
       FirebaseFirestore.instance
-          .collection(userUniqueId)
+          .collection("profilePic $userUniqueId")
           .doc("profilePic")
           .set({"profilePic": downloadUrl});
     } else {
@@ -54,24 +56,27 @@ class _DrawerScreenState extends State<DrawerScreen> {
     }
   }
 
-  // void initialValue() async {
-  //   DocumentSnapshot snapshot = await FirebaseFirestore.instance
-  //       .collection(userUniqueId)
-  //       .doc("profilePic")
-  //       .get();
-  //   setState(() {
-  //     // Map<String, dynamic> userData = snapshot.data();
-  //     profilePicShow = snapshot.data().toString();
-  //     log("-----profilepicshow$profilePicShow");
-  //   });
-  // }
+  //function for get profilePic from firestore-database
+  getImage() async {
+    // log("method call and show pic path $profilePicShow");
+    DocumentSnapshot documentSnapshot = await FirebaseFirestore.instance
+        .collection("profilePic $userUniqueId")
+        .doc("profilePic")
+        .get();
+    // log(documentSnapshot.get("profilePic").toString());
+    setState(() {
+      profilePicShow = documentSnapshot.get("profilePic").toString();
+    });
+    // log(profilePicShow.toString());
+  }
 
   @override
-  // void initState() {
-  //   // TODO: implement initState
-  //   initialValue();
-  //   super.initState();
-  // }
+  void initState() {
+    setState(() {
+      getImage();
+    });
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -94,12 +99,16 @@ class _DrawerScreenState extends State<DrawerScreen> {
                     padding: EdgeInsets.zero,
                     onPressed: () async {
                       storeAndShowPicture();
+                      DrawerScreen();
                     },
                     child: CircleAvatar(
                       radius: 40,
                       backgroundColor: Colors.grey,
                       backgroundImage:
-                          profilePic != null ? FileImage(profilePic!) : null,
+                          // profilePic != null ? FileImage(profilePic!) : null,
+                          profilePicShow != null
+                              ? NetworkImage(profilePicShow!)
+                              : null,
                     ),
                   ),
                   Column(

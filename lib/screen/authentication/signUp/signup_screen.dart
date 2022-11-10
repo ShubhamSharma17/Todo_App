@@ -1,11 +1,14 @@
-// ignore_for_file: prefer_const_constructors, use_build_context_synchronously
+// ignore_for_file: prefer_const_constructors, use_build_context_synchronously, prefer_const_literals_to_create_immutables
 
 import 'dart:developer';
-
-import 'package:firebase_core/firebase_core.dart';
+import 'dart:io';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:uuid/uuid.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
@@ -17,26 +20,43 @@ class SignUpScreen extends StatefulWidget {
 class _SignUpScreenState extends State<SignUpScreen> {
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
-  TextEditingController confirmpasswordController = TextEditingController();
+  TextEditingController nameController = TextEditingController();
+  File? profilePic;
 
-  //function for create account
+//function for select image from device
+  storeAndShowPicture() async {
+    XFile? selectedImage =
+        await ImagePicker().pickImage(source: ImageSource.gallery);
+
+    if (selectedImage != null) {
+      File convertedSelectedImage = File(selectedImage.path);
+      setState(() {
+        profilePic = convertedSelectedImage;
+      });
+      log(profilePic.toString());
+    } else {
+      log("no image selected!");
+    }
+  }
+
+  //function for create new account
   void createAccount() async {
     String email = emailController.text.trim();
     String password = passwordController.text.trim();
-    String confirmpassword = confirmpasswordController.text.trim();
+    String name = nameController.text.trim();
 
-    if (email == "" || password == "" || confirmpassword == "") {
+    if (email == "" || password == "" || name == "" || profilePic == null) {
       log("Enter correct credencials ");
-    } else if (password != confirmpassword) {
-      log("Enter correct password ");
-    }
-    //create account
-    else {
+    } else {
       try {
         UserCredential userCredential = await FirebaseAuth.instance
             .createUserWithEmailAndPassword(email: email, password: password);
         if (userCredential.user != null) {
           log("User Created ");
+          log("Calling user data function");
+          storeUserData();
+          // log(FirebaseAuth.instance.currentUser!.uid.toString());
+
           Navigator.pop(context);
         }
       } on FirebaseAuthException catch (e) {
@@ -45,36 +65,126 @@ class _SignUpScreenState extends State<SignUpScreen> {
     }
   }
 
+  //function for store image,name in firebase-storage and firestore-database after user create
+  storeUserData() async {
+    String userUniqueId = FirebaseAuth.instance.currentUser!.uid.toString();
+    //image store in firebase storage
+    UploadTask uploadTask = FirebaseStorage.instance
+        .ref()
+        .child("profilePictures")
+        .child(userUniqueId)
+        .child(Uuid().v1())
+        .putFile(profilePic!);
+
+    TaskSnapshot taskSnapshot = await uploadTask;
+    String downloadUrl = await taskSnapshot.ref.getDownloadURL();
+    log("Image selected!");
+    log(userUniqueId.toString());
+    log(downloadUrl.toString());
+
+    FirebaseFirestore.instance
+        .collection("profilePic $userUniqueId")
+        .doc("profilePic")
+        .set({
+      "profilePic": downloadUrl,
+      "name": nameController.text.trim(),
+      "gmail": emailController.text.trim()
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(title: Text("SignUp Screen")),
-      body: SafeArea(
-        child: ListView(
+      body: Padding(
+        padding: const EdgeInsets.only(left: 15, right: 15, top: 10),
+        child: Column(
           children: [
-            Padding(
-              padding: const EdgeInsets.all(15),
-              child: Column(children: [
-                TextField(
-                  keyboardType: TextInputType.emailAddress,
-                  controller: emailController,
-                  decoration: InputDecoration(labelText: "Email "),
-                ),
-                TextField(
-                  controller: passwordController,
-                  decoration: InputDecoration(labelText: "password "),
-                ),
-                TextField(
-                  controller: confirmpasswordController,
-                  decoration: InputDecoration(labelText: "confirm password "),
-                ),
-                CupertinoButton(
-                    child: Text("SignUp"),
-                    onPressed: () {
-                      createAccount();
-                    }),
-              ]),
+            SizedBox(height: 10),
+            Text(
+              "Glad to see you!",
+              style: TextStyle(fontSize: 30, fontWeight: FontWeight.w500),
             ),
+            Divider(
+              height: 10,
+              color: Colors.black,
+              thickness: 1,
+            ),
+            // SizedBox(height: 10),
+            CupertinoButton(
+              onPressed: () {
+                storeAndShowPicture();
+              },
+              child: CircleAvatar(
+                radius: 70,
+                backgroundImage:
+                    profilePic != null ? FileImage(profilePic!) : null,
+              ),
+            ),
+            SizedBox(height: 10),
+            Container(
+                decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(10.0),
+                    border: Border.all()),
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 5, right: 5),
+                  child: TextFormField(
+                      controller: nameController,
+                      decoration: InputDecoration(
+                        labelStyle: TextStyle(color: Colors.black),
+                        border: InputBorder.none,
+                        labelText: 'Enter Your Name',
+                      )),
+                )),
+            SizedBox(height: 10),
+            Container(
+                decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(10.0),
+                    border: Border.all()),
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 5, right: 5),
+                  child: TextFormField(
+                      keyboardType: TextInputType.emailAddress,
+                      controller: emailController,
+                      decoration: InputDecoration(
+                        labelStyle: TextStyle(color: Colors.black),
+                        border: InputBorder.none,
+                        labelText: 'Enter Your Email',
+                      )),
+                )),
+            SizedBox(height: 10),
+            Container(
+                decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(10.0),
+                    border: Border.all()),
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 5, right: 5),
+                  child: TextFormField(
+                      controller: passwordController,
+                      decoration: InputDecoration(
+                        labelStyle: TextStyle(color: Colors.black),
+                        border: InputBorder.none,
+                        labelText: 'Enter password',
+                      )),
+                )),
+            SizedBox(height: 20),
+            CupertinoButton(
+                padding: EdgeInsets.symmetric(horizontal: 90),
+                color: Colors.black,
+                child: Text("Create Account"),
+                onPressed: () {
+                  createAccount();
+                  // Timer(
+                  //   Duration(seconds: 7),
+                  //   () {
+                  //     storeUserData();
+                  //   },
+                  // );
+                }),
           ],
         ),
       ),
