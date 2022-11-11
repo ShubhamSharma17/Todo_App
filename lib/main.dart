@@ -5,7 +5,6 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:todo_app/home.dart';
 import 'package:todo_app/screen/authentication/login/login_screen.dart';
-import 'package:todo_app/screen/authentication/signUp/signup_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

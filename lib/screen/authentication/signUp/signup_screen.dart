@@ -65,7 +65,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
     }
   }
 
-  //function for store image,name in firebase-storage and firestore-database after user create
+  //function for store image,name and email in firebase-database and image in  firestore-database after user create
   storeUserData() async {
     String userUniqueId = FirebaseAuth.instance.currentUser!.uid.toString();
     //image store in firebase storage

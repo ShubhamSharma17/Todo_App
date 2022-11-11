@@ -29,6 +29,15 @@ class _DrawerScreenState extends State<DrawerScreen> {
     XFile? selectedImage =
         await ImagePicker().pickImage(source: ImageSource.gallery);
 
+    //get User name
+    String userName = FirebaseAuth.instance.currentUser!.displayName.toString();
+
+    //get User email
+    String useremail = FirebaseAuth.instance.currentUser!.email.toString();
+
+    log("user name $userName");
+    log("user email $useremail");
+
     if (selectedImage != null) {
       File convertedSelectedImage = File(selectedImage.path);
       setState(() {
@@ -50,7 +59,11 @@ class _DrawerScreenState extends State<DrawerScreen> {
       FirebaseFirestore.instance
           .collection("profilePic $userUniqueId")
           .doc("profilePic")
-          .set({"profilePic": downloadUrl});
+          .set({
+        "profilePic": downloadUrl,
+        "name": userName,
+        "gmail": useremail
+      });
     } else {
       log("no image selected!");
     }
@@ -85,45 +98,63 @@ class _DrawerScreenState extends State<DrawerScreen> {
       child: ListView(
         padding: EdgeInsets.all(0),
         children: [
-          Container(
-            padding: EdgeInsets.only(top: 40),
-            width: MediaQuery.of(context).size.width * .65,
-            height: 200,
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Column(
-                // crossAxisAlignment: CrossAxisAlignment.start,
-                // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  CupertinoButton(
-                    padding: EdgeInsets.zero,
-                    onPressed: () async {
-                      storeAndShowPicture();
-                      DrawerScreen();
-                    },
-                    child: CircleAvatar(
-                      radius: 40,
-                      backgroundColor: Colors.grey,
-                      backgroundImage:
-                          // profilePic != null ? FileImage(profilePic!) : null,
-                          profilePicShow != null
-                              ? NetworkImage(profilePicShow!)
-                              : null,
-                    ),
-                  ),
-                  Column(
-                    // crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "Shubham Sharma",
-                        style: TextStyle(fontSize: 20),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: StreamBuilder<QuerySnapshot>(
+              stream: FirebaseFirestore.instance
+                  .collection("profilePic $userUniqueId")
+                  .snapshots(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.active) {
+                  if (snapshot.hasData && snapshot.data != null) {
+                    return Container(
+                      height: MediaQuery.of(context).size.height * .2,
+                      child: ListView.builder(
+                        itemCount: snapshot.data!.docs.length,
+                        itemBuilder: (context, index) {
+                          Map<String, dynamic> userMap =
+                              snapshot.data!.docs[index].data()
+                                  as Map<String, dynamic>;
+                          return Column(
+                            children: [
+                              CupertinoButton(
+                                padding: EdgeInsets.zero,
+                                onPressed: () async {
+                                  storeAndShowPicture();
+                                },
+                                child: CircleAvatar(
+                                  radius: 40,
+                                  backgroundColor: Colors.grey,
+                                  backgroundImage:
+                                      NetworkImage(userMap["profilePic"]),
+                                ),
+                              ),
+                              Column(
+                                // crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    userMap["name"],
+                                    // "name",
+                                    style: TextStyle(fontSize: 20),
+                                  ),
+                                  SizedBox(height: 5),
+                                  Text(userMap["gmail"]),
+                                ],
+                              )
+                            ],
+                          );
+                        },
                       ),
-                      SizedBox(height: 5),
-                      Text("shubhamsharma706568@gmail.com"),
-                    ],
-                  )
-                ],
-              ),
+                    );
+                  } else {
+                    return Text("No Data!");
+                  }
+                } else {
+                  return Center(
+                    child: CircularProgressIndicator(),
+                  );
+                }
+              },
             ),
           ),
           SizedBox(height: 20),

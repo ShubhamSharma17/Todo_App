@@ -25,33 +25,57 @@ class _HomeScreenState extends State<HomeScreen> {
   final userUniqueId = FirebaseAuth.instance.currentUser!.uid;
 
   //save profile picture in firestore-database
-  saveProfilePic() async {
+  saveUserData() async {
     try {
       // log("trying to get current data.... ${FirebaseAuth.instance.currentUser!.photoURL.toString()}");
+
+      //get name and gmail from which user who login with gmail
+      // DocumentSnapshot documentSnapshot = await FirebaseFirestore.instance
+      //     .collection("profilePic $userUniqueId")
+      //     .doc("profilePic")
+      //     .get();
+
+      //name
+      // String userName = documentSnapshot.get("name").toString();
+      // log("User name $userName");
+      //gmail
+      // String userGmail = documentSnapshot.get("gmail").toString();
+      // log("User gmail address $userGmail");
+
+      //User data when user login with gmail
       QuerySnapshot querySnapshot = await FirebaseFirestore.instance
           .collection("profilePic $userUniqueId")
           .get();
-      //get name and gmail from which user who login with gmail
-      DocumentSnapshot documentSnapshot = await FirebaseFirestore.instance
-          .collection("profilePic $userUniqueId")
-          .doc("profilePic")
-          .get();
-
-      //name
-      String userName = documentSnapshot.get("name").toString();
-      log("User name $userName");
-      //gmail
-      String userGmail = documentSnapshot.get("gmail").toString();
-      log("User gmail address $userGmail");
-
+      // log("DisplayName.....${FirebaseAuth.instance.currentUser!.displayName.toString()}");
+      // log("email Name.....${FirebaseAuth.instance.currentUser!.email.toString()}");
+      // log("photo URL.....${FirebaseAuth.instance.currentUser!.photoURL.toString()}");
       // log("Cheaking user data hai ki nhi..... ${""}");
       if (querySnapshot.docs.isEmpty) {
-        String profilePicURL =
+        //get user profile pic
+        String userProfilePicURL =
             FirebaseAuth.instance.currentUser!.photoURL.toString();
-        FirebaseFirestore.instance
-            .collection("profilePic $userUniqueId")
-            .doc("profilePic")
-            .set({"profilePic": profilePicURL});
+
+        //get User name
+        String userName =
+            FirebaseAuth.instance.currentUser!.displayName.toString();
+
+        //get User email
+        String useremail = FirebaseAuth.instance.currentUser!.email.toString();
+
+        //add User email,name and pic to firestore-Database
+        String providerId =
+            FirebaseAuth.instance.currentUser!.providerData[0].providerId;
+        //when user login with google
+        if (providerId == "google.com") {
+          FirebaseFirestore.instance
+              .collection("profilePic $userUniqueId")
+              .doc("profilePic")
+              .set({
+            "profilePic": userProfilePicURL,
+            "name": userName,
+            "gmail": useremail
+          });
+        }
       }
     } on FirebaseException catch (error) {
       log(error.code.toString());
@@ -60,7 +84,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   void initState() {
-    saveProfilePic();
+    saveUserData();
     super.initState();
   }
 
