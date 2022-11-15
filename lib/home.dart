@@ -27,8 +27,6 @@ class _HomeScreenState extends State<HomeScreen> {
   //save profile picture in firestore-database
   saveUserData() async {
     try {
-      // log("trying to get current data.... ${FirebaseAuth.instance.currentUser!.photoURL.toString()}");
-
       //get name and gmail from which user who login with gmail
       // DocumentSnapshot documentSnapshot = await FirebaseFirestore.instance
       //     .collection("profilePic $userUniqueId")
@@ -46,8 +44,9 @@ class _HomeScreenState extends State<HomeScreen> {
       QuerySnapshot querySnapshot = await FirebaseFirestore.instance
           .collection("profilePic $userUniqueId")
           .get();
-      // log("DisplayName.....${FirebaseAuth.instance.currentUser!.displayName.toString()}");
-      // log("email Name.....${FirebaseAuth.instance.currentUser!.email.toString()}");
+      log("User data cheaking...... ${FirebaseAuth.instance.currentUser!.toString()}");
+      log("DisplayName.....${FirebaseAuth.instance.currentUser!.displayName.toString()}");
+      log("email Name.....${FirebaseAuth.instance.currentUser!.email.toString()}");
       // log("photo URL.....${FirebaseAuth.instance.currentUser!.photoURL.toString()}");
       // log("Cheaking user data hai ki nhi..... ${""}");
       if (querySnapshot.docs.isEmpty) {

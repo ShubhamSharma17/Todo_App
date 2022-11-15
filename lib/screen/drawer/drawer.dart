@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_constructors, sized_box_for_whitespace, prefer_const_literals_to_create_immutables
+// ignore_for_file: prefer_const_constructors, sized_box_for_whitespace, prefer_const_literals_to_create_immutables, use_build_context_synchronously
 import 'dart:developer';
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -6,6 +6,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:todo_app/home.dart';
 import 'package:todo_app/screen/addList/add_list_screen.dart';
@@ -23,6 +24,7 @@ class _DrawerScreenState extends State<DrawerScreen> {
   File? profilePic;
   String? profilePicShow;
   String userUniqueId = FirebaseAuth.instance.currentUser!.uid;
+  String? userName;
 
 //function for store image
   storeAndShowPicture() async {
@@ -30,7 +32,21 @@ class _DrawerScreenState extends State<DrawerScreen> {
         await ImagePicker().pickImage(source: ImageSource.gallery);
 
     //get User name
-    String userName = FirebaseAuth.instance.currentUser!.displayName.toString();
+    String providerId = FirebaseAuth
+        .instance.currentUser!.providerData[0].providerId
+        .toString();
+    DocumentSnapshot documentSnapshot = await FirebaseFirestore.instance
+        .collection("profilePic $userUniqueId")
+        .doc("profilePic")
+        .get();
+    //if user login with google
+    if (providerId == "google.com") {
+      userName = FirebaseAuth.instance.currentUser!.displayName.toString();
+    }
+    //if user login without google
+    else {
+      userName = documentSnapshot.get("name").toString();
+    }
 
     //get User email
     String useremail = FirebaseAuth.instance.currentUser!.email.toString();
@@ -71,16 +87,49 @@ class _DrawerScreenState extends State<DrawerScreen> {
 
   //function for get profilePic from firestore-database
   getImage() async {
+    // log("provider id ${FirebaseAuth.instance.currentUser!.providerData[0].providerId}");
     // log("method call and show pic path $profilePicShow");
     DocumentSnapshot documentSnapshot = await FirebaseFirestore.instance
         .collection("profilePic $userUniqueId")
         .doc("profilePic")
         .get();
+    // log("get user name from firebase.... ${documentSnapshot.get("name").toString()}");
     // log(documentSnapshot.get("profilePic").toString());
     setState(() {
       profilePicShow = documentSnapshot.get("profilePic").toString();
     });
     // log(profilePicShow.toString());
+  }
+
+  //function for logout
+  logOut() async {
+    String providerId =
+        FirebaseAuth.instance.currentUser!.providerData[0].providerId;
+    //when user login with google
+    if (providerId == "google.com") {
+      await GoogleSignIn().disconnect();
+      FirebaseAuth.instance.signOut();
+      log("Sign Out from google");
+      // Navigator.popUntil(context, (route) => route.isFirst);
+      // Navigator.pushReplacement(
+      //     context,
+      //     MaterialPageRoute(
+      //       builder: (context) => LoginScreen(),
+      //     ));
+    }
+    //when user login with gmail
+    else {
+      FirebaseAuth.instance.signOut();
+      log("Sign Out from without google");
+    }
+    Navigator.popUntil(context, (route) => route.isFirst);
+    Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => LoginScreen(),
+        ));
+
+    log("Log out Successfully.........)");
   }
 
   @override
@@ -200,14 +249,15 @@ class _DrawerScreenState extends State<DrawerScreen> {
           ),
           InkWell(
             onTap: () {
-              FirebaseAuth.instance.signOut();
-
-              Navigator.popUntil(context, (route) => route.isFirst);
-              Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => LoginScreen(),
-                  ));
+              //logout method
+              // FirebaseAuth.instance.signOut();
+              // Navigator.popUntil(context, (route) => route.isFirst);
+              // Navigator.pushReplacement(
+              //     context,
+              //     MaterialPageRoute(
+              //       builder: (context) => LoginScreen(),
+              //     ));
+              logOut();
             },
             child: ListTile(
               title: Text("Logout"),
