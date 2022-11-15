@@ -11,6 +11,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:todo_app/home.dart';
 import 'package:todo_app/screen/addList/add_list_screen.dart';
 import 'package:todo_app/screen/authentication/login/login_screen.dart';
+import 'package:todo_app/screen/profilepage_screen.dart';
 import 'package:uuid/uuid.dart';
 
 class DrawerScreen extends StatefulWidget {
@@ -221,9 +222,19 @@ class _DrawerScreenState extends State<DrawerScreen> {
               leading: Icon(Icons.home_filled, size: 30),
             ),
           ),
-          ListTile(
-            title: Text("Profile"),
-            leading: Icon(Icons.person_sharp, size: 30),
+          InkWell(
+            onTap: () {
+              Navigator.pop(context);
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ProfilePageScreen(),
+                  ));
+            },
+            child: ListTile(
+              title: Text("Profile"),
+              leading: Icon(Icons.person_sharp, size: 30),
+            ),
           ),
           InkWell(
             onTap: () {
