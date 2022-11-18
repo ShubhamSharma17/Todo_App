@@ -71,7 +71,7 @@ class _LoginScreenState extends State<LoginScreen> {
             builder: (context) => HomeScreen(),
           ));
     }
-    // log(userCredential.additionalUserInfo!.profile!.toString());
+    log(userCredential.additionalUserInfo!.profile!.toString());
     // log(userCredential.additionalUserInfo!.profile!["name"].toString());
     // log(userCredential.additionalUserInfo!.profile!["email"].toString());
     // log(userCredential.additionalUserInfo!.profile!["picture"].toString());

@@ -136,7 +136,7 @@ class _DrawerScreenState extends State<DrawerScreen> {
   @override
   void initState() {
     setState(() {
-      getImage();
+      // getImage();
     });
     super.initState();
   }
