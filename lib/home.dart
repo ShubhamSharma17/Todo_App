@@ -153,37 +153,73 @@ class _HomeScreenState extends State<HomeScreen> {
                             snapshot.data!.docs[index].data();
                         return Column(
                           children: [
-                            ListTile(
-                                tileColor: Colors.grey[200],
-                                title: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text("${index + 1}"),
-                                    SizedBox(
-                                        width:
-                                            MediaQuery.of(context).size.width *
-                                                .5,
-                                        child: Text("${userData["task"]}")),
-                                    FloatingActionButton(
-                                        heroTag: null,
-                                        elevation: 0,
-                                        backgroundColor: Colors.transparent,
-                                        mini: true,
-                                        onPressed: () {
-                                          FirebaseFirestore.instance
-                                              .collection(userUniqueId)
-                                              .doc(snapshot.data!.docs[index].id
-                                                  .toString())
-                                              .delete();
-                                          log("Delete Successfull");
-                                        },
-                                        child: Icon(
-                                          Icons.delete_outlined,
-                                          color: Colors.black,
-                                        )),
-                                  ],
-                                )),
+                            InkWell(
+                              onTap: () {
+                                showDialog(
+                                    context: context,
+                                    builder: (BuildContext context) {
+                                      return AlertDialog(
+                                        backgroundColor: Colors.amberAccent,
+                                        actions: [
+                                          ElevatedButton(
+                                              onPressed: () {
+                                                FirebaseFirestore.instance
+                                                    .collection(userUniqueId)
+                                                    .doc(snapshot
+                                                        .data!.docs[index].id
+                                                        .toString())
+                                                    .delete();
+                                                log("Delete Successfull");
+                                                Navigator.pop(context);
+                                              },
+                                              child: Text("Yes")),
+                                          ElevatedButton(
+                                              onPressed: () {
+                                                Navigator.pop(context);
+                                              },
+                                              child: Text("No"))
+                                        ],
+                                        title: Text("Do you want to delete!"),
+                                        // content: Text("Hello World"),
+                                      );
+                                    });
+                              },
+                              child: ListTile(
+                                  tileColor: Colors.grey[200],
+                                  title: Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      Text("${index + 1}."),
+                                      SizedBox(
+                                        width: 5,
+                                      ),
+                                      SizedBox(
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width *
+                                              .5,
+                                          child: Text("${userData["task"]}")),
+                                      // FloatingActionButton(
+                                      //     heroTag: null,
+                                      //     elevation: 0,
+                                      //     backgroundColor: Colors.transparent,
+                                      //     mini: true,
+                                      //     onPressed: () {
+                                      //       FirebaseFirestore.instance
+                                      //           .collection(userUniqueId)
+                                      //           .doc(snapshot
+                                      //               .data!.docs[index].id
+                                      //               .toString())
+                                      //           .delete();
+                                      //       log("Delete Successfull");
+                                      //     },
+                                      //     child: Icon(
+                                      //       Icons.delete_outlined,
+                                      //       color: Colors.black,
+                                      //     )),
+                                    ],
+                                  )),
+                            ),
                             SizedBox(height: 10),
                           ],
                         );
