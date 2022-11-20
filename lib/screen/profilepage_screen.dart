@@ -25,7 +25,7 @@ class _ProfilePageScreenState extends State<ProfilePageScreen> {
   TextEditingController nameController = TextEditingController();
 
   //function for store image
-  SelectPicture() async {
+  selectPicture() async {
     XFile? selectedImage =
         await ImagePicker().pickImage(source: ImageSource.gallery);
 
@@ -147,7 +147,7 @@ class _ProfilePageScreenState extends State<ProfilePageScreen> {
                                 ),
                                 CupertinoButton(
                                     onPressed: () {
-                                      SelectPicture();
+                                      selectPicture();
                                     },
                                     child: Container(
                                       // color: Colors.amber,

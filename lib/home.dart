@@ -81,6 +81,28 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
+  //temporary function for date and time
+  date() async {
+    final DateTime? getDate = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(DateTime.now().year, DateTime.now().month),
+      lastDate: DateTime(2035),
+    );
+
+    log("Cheaking date ${getDate.toString()}");
+    // log("Cheaking date and time ${DateTime.now().toString()}");
+  }
+
+  //function for checking geting time from user
+  time() async {
+    final TimeOfDay? getTime = await showTimePicker(
+        context: context,
+        initialTime: TimeOfDay(
+            hour: TimeOfDay.now().hour, minute: TimeOfDay.now().minute));
+    log("Cheaking time ${getTime.toString()}");
+  }
+
   @override
   void initState() {
     saveUserData();
@@ -94,6 +116,17 @@ class _HomeScreenState extends State<HomeScreen> {
         title:
             Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
           Text("Todo List"),
+          // FloatingActionButton(
+          //   onPressed: () {
+          //     date();
+          //   },
+          // ),
+          // FloatingActionButton(
+          //   heroTag: ,
+          //   onPressed: () {
+          //     time();
+          //   },
+          // ),
           FloatingActionButton(
             heroTag: null,
             elevation: 0,

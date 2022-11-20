@@ -17,35 +17,55 @@ class AddListScreen extends StatefulWidget {
 class _AddListScreenState extends State<AddListScreen> {
   TextEditingController taskController = TextEditingController();
   final userUniqueId = FirebaseAuth.instance.currentUser!.uid;
+  String dateString = " ";
+  String timeString = " ";
 
   //function for add list
   void addTask() {
     String addTask = taskController.text.trim();
     taskController.clear();
 
-    if (addTask != "") {
+    if (addTask != "" && dateString != "" && timeString != "") {
       try {
-        FirebaseFirestore.instance
-            .collection(userUniqueId)
-            .add({"task": addTask.toUpperCase()});
+        FirebaseFirestore.instance.collection(userUniqueId).add({
+          "task": addTask.toUpperCase(),
+          "time": timeString,
+          "date": dateString
+        });
         log("Task add successfully!");
       } on FirebaseException catch (e) {
         log(e.code.toString());
       }
-    }
-    // if (addTask != "") {
-    //   try {
-    //     FirebaseFirestore.instance
-    //         .collection("taskList")
-    //         .add({"task": addTask.toUpperCase()});
-    //     log("Task add successfully!");
-    //   } on FirebaseException catch (e) {
-    //     log(e.code.toString());
-    //   }
-    // }
-    else {
+    } else {
       log("Correct data!");
     }
+  }
+
+  //function for get date from user
+  date() async {
+    final DateTime? getDate = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(DateTime.now().year, DateTime.now().month),
+      lastDate: DateTime(2035),
+    );
+    setState(() {
+      dateString =
+          "${getDate!.day.toString()}-${getDate.month.toString()}-${getDate.year.toString()}";
+    });
+    log("Cheaking date $dateString");
+  }
+
+  //function for get time from user
+  time() async {
+    final TimeOfDay? getTime = await showTimePicker(
+      context: context,
+      initialTime: TimeOfDay.now(),
+    );
+    setState(() {
+      timeString = getTime!.format(context).toString();
+    });
+    log("Cheaking time ${timeString.toString()}");
   }
 
   @override
@@ -62,6 +82,46 @@ class _AddListScreenState extends State<AddListScreen> {
                 TextField(
                   controller: taskController,
                   decoration: InputDecoration(labelText: "Add Task"),
+                ),
+                SizedBox(height: 15),
+                Column(
+                  children: [
+                    Row(
+                      children: [
+                        Container(
+                          // color: Colors.amber,
+                          width: MediaQuery.of(context).size.width * .5,
+                          child: TextField(
+                            decoration: InputDecoration(
+                                label: Text(dateString), enabled: false),
+                          ),
+                        ),
+                        CupertinoButton(
+                          child: Text("Date"),
+                          onPressed: () {
+                            date();
+                          },
+                        )
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        Container(
+                            // color: Colors.amber,
+                            width: MediaQuery.of(context).size.width * .5,
+                            child: TextField(
+                              decoration: InputDecoration(
+                                  label: Text(timeString), enabled: false),
+                            )),
+                        CupertinoButton(
+                          child: Text("time"),
+                          onPressed: () {
+                            time();
+                          },
+                        )
+                      ],
+                    ),
+                  ],
                 ),
                 SizedBox(height: 15),
                 CupertinoButton(
