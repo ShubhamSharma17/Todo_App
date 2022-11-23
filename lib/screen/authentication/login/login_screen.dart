@@ -87,25 +87,30 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Colors.blueGrey[100],
       resizeToAvoidBottomInset: false,
       // appBar: AppBar(title: Text("Login Screen")),
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.only(top: 50, left: 30, right: 30),
+          padding: const EdgeInsets.only(top: 30, left: 30, right: 30),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
+              Text(
+                "WELCOME",
+                style: TextStyle(
+                  fontSize: 50,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              // SizedBox(height: 30),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Text(
-                    "WELCOME",
-                    style: TextStyle(
-                      fontSize: 50,
-                      fontWeight: FontWeight.bold,
-                    ),
+                  Image(
+                    image: AssetImage("assets/images/undraw_Login_re_4vu2.png"),
                   ),
+                  SizedBox(height: 30),
                   Text(
                     "Please enter your details",
                     style: TextStyle(
@@ -115,7 +120,76 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                 ],
               ),
+              SizedBox(height: 10),
+              Container(
+                padding:
+                    EdgeInsets.only(left: 15, right: 15, top: 0, bottom: 0),
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(40),
+                    border: Border.all()),
+                child: TextField(
+                  keyboardType: TextInputType.emailAddress,
+                  decoration: InputDecoration(
+                    labelText: "Email",
+                    border: InputBorder.none,
+                    labelStyle: TextStyle(color: Colors.black),
+                  ),
+                  controller: emailController,
+                ),
+              ),
+              SizedBox(height: 10),
+              Container(
+                padding:
+                    EdgeInsets.only(left: 15, right: 15, top: 0, bottom: 0),
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(40),
+                    border: Border.all()),
+                child: TextField(
+                  decoration: InputDecoration(
+                    labelText: "password",
+                    border: InputBorder.none,
+                    labelStyle: TextStyle(color: Colors.black),
+                  ),
+                  controller: passwordController,
+                ),
+              ),
               SizedBox(height: 20),
+              CupertinoButton(
+                  padding: EdgeInsets.symmetric(horizontal: 110),
+                  color: Colors.amber,
+                  child: Text(
+                    "Log in",
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 20,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  onPressed: () {
+                    signIn();
+                  }),
+              SizedBox(height: 20),
+              Container(
+                // padding: EdgeInsets.only(left: 20),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Container(
+                      color: Colors.black,
+                      height: 1,
+                      width: MediaQuery.of(context).size.width * .4,
+                    ),
+                    Text("or"),
+                    Container(
+                      color: Colors.black,
+                      height: 1,
+                      width: MediaQuery.of(context).size.width * .4,
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(height: 20),
+              //google sign button
               InkWell(
                 onTap: () {
                   googleLogin();
@@ -148,43 +222,6 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                 ),
               ),
-              SizedBox(height: 30),
-              Container(
-                // padding: EdgeInsets.only(left: 20),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Container(
-                      color: Colors.black,
-                      height: 1,
-                      width: MediaQuery.of(context).size.width * .4,
-                    ),
-                    Text("or"),
-                    Container(
-                      color: Colors.black,
-                      height: 1,
-                      width: MediaQuery.of(context).size.width * .4,
-                    ),
-                  ],
-                ),
-              ),
-              TextField(
-                keyboardType: TextInputType.emailAddress,
-                decoration: InputDecoration(labelText: "Email"),
-                controller: emailController,
-              ),
-              TextField(
-                decoration: InputDecoration(labelText: "password"),
-                controller: passwordController,
-              ),
-              SizedBox(height: 20),
-              CupertinoButton(
-                  padding: EdgeInsets.symmetric(horizontal: 110),
-                  color: Colors.black,
-                  child: Text("Log in"),
-                  onPressed: () {
-                    signIn();
-                  }),
               SizedBox(height: 20),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
