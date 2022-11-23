@@ -167,17 +167,23 @@ class _DrawerScreenState extends State<DrawerScreen> {
                                   as Map<String, dynamic>;
                           return Column(
                             children: [
-                              CupertinoButton(
-                                padding: EdgeInsets.zero,
-                                onPressed: () async {
-                                  storeAndShowPicture();
-                                },
-                                child: CircleAvatar(
-                                  radius: 40,
-                                  backgroundColor: Colors.grey,
-                                  backgroundImage:
-                                      NetworkImage(userMap["profilePic"]),
-                                ),
+                              // CupertinoButton(
+                              //   padding: EdgeInsets.zero,
+                              //   onPressed: () async {
+                              //     storeAndShowPicture();
+                              //   },
+                              //   child: CircleAvatar(
+                              //     radius: 40,
+                              //     backgroundColor: Colors.grey,
+                              //     backgroundImage:
+                              //         NetworkImage(userMap["profilePic"]),
+                              //   ),
+                              // ),
+                              CircleAvatar(
+                                radius: 40,
+                                backgroundColor: Colors.grey,
+                                backgroundImage:
+                                    NetworkImage(userMap["profilePic"]),
                               ),
                               Column(
                                 // crossAxisAlignment: CrossAxisAlignment.start,
