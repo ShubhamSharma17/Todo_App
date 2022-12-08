@@ -94,98 +94,100 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      resizeToAvoidBottomInset: false,
-      appBar: AppBar(title: Text("SignUp Screen")),
-      body: Padding(
-        padding: const EdgeInsets.only(left: 15, right: 15, top: 10),
-        child: Column(
-          children: [
-            SizedBox(height: 10),
-            Text(
-              "Glad to see you!",
-              style: TextStyle(fontSize: 30, fontWeight: FontWeight.w500),
-            ),
-            Divider(
-              height: 10,
-              color: Colors.black,
-              thickness: 1,
-            ),
-            // SizedBox(height: 10),
-            CupertinoButton(
-              onPressed: () {
-                storeAndShowPicture();
-              },
-              child: CircleAvatar(
-                radius: 70,
-                backgroundImage:
-                    profilePic != null ? FileImage(profilePic!) : null,
+    return SafeArea(
+      child: Scaffold(
+        resizeToAvoidBottomInset: false,
+        appBar: AppBar(title: Text("SignUp Screen")),
+        body: Padding(
+          padding: const EdgeInsets.only(left: 15, right: 15, top: 10),
+          child: Column(
+            children: [
+              SizedBox(height: 10),
+              Text(
+                "Glad to see you!",
+                style: TextStyle(fontSize: 30, fontWeight: FontWeight.w500),
               ),
-            ),
-            SizedBox(height: 10),
-            Container(
-                decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(10.0),
-                    border: Border.all()),
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 5, right: 5),
-                  child: TextFormField(
-                      controller: nameController,
-                      decoration: InputDecoration(
-                        labelStyle: TextStyle(color: Colors.black),
-                        border: InputBorder.none,
-                        labelText: 'Enter Your Name',
-                      )),
-                )),
-            SizedBox(height: 10),
-            Container(
-                decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(10.0),
-                    border: Border.all()),
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 5, right: 5),
-                  child: TextFormField(
-                      keyboardType: TextInputType.emailAddress,
-                      controller: emailController,
-                      decoration: InputDecoration(
-                        labelStyle: TextStyle(color: Colors.black),
-                        border: InputBorder.none,
-                        labelText: 'Enter Your Email',
-                      )),
-                )),
-            SizedBox(height: 10),
-            Container(
-                decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(10.0),
-                    border: Border.all()),
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 5, right: 5),
-                  child: TextFormField(
-                      controller: passwordController,
-                      decoration: InputDecoration(
-                        labelStyle: TextStyle(color: Colors.black),
-                        border: InputBorder.none,
-                        labelText: 'Enter password',
-                      )),
-                )),
-            SizedBox(height: 20),
-            CupertinoButton(
-                padding: EdgeInsets.symmetric(horizontal: 90),
+              Divider(
+                height: 10,
                 color: Colors.black,
-                child: Text("Create Account"),
+                thickness: 1,
+              ),
+              // SizedBox(height: 10),
+              CupertinoButton(
                 onPressed: () {
-                  createAccount();
-                  // Timer(
-                  //   Duration(seconds: 7),
-                  //   () {
-                  //     storeUserData();
-                  //   },
-                  // );
-                }),
-          ],
+                  storeAndShowPicture();
+                },
+                child: CircleAvatar(
+                  radius: 70,
+                  backgroundImage:
+                      profilePic != null ? FileImage(profilePic!) : null,
+                ),
+              ),
+              SizedBox(height: 10),
+              Container(
+                  decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(10.0),
+                      border: Border.all()),
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 5, right: 5),
+                    child: TextFormField(
+                        controller: nameController,
+                        decoration: InputDecoration(
+                          labelStyle: TextStyle(color: Colors.black),
+                          border: InputBorder.none,
+                          labelText: 'Enter Your Name',
+                        )),
+                  )),
+              SizedBox(height: 10),
+              Container(
+                  decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(10.0),
+                      border: Border.all()),
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 5, right: 5),
+                    child: TextFormField(
+                        keyboardType: TextInputType.emailAddress,
+                        controller: emailController,
+                        decoration: InputDecoration(
+                          labelStyle: TextStyle(color: Colors.black),
+                          border: InputBorder.none,
+                          labelText: 'Enter Your Email',
+                        )),
+                  )),
+              SizedBox(height: 10),
+              Container(
+                  decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(10.0),
+                      border: Border.all()),
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 5, right: 5),
+                    child: TextFormField(
+                        controller: passwordController,
+                        decoration: InputDecoration(
+                          labelStyle: TextStyle(color: Colors.black),
+                          border: InputBorder.none,
+                          labelText: 'Enter password',
+                        )),
+                  )),
+              SizedBox(height: 20),
+              CupertinoButton(
+                  padding: EdgeInsets.symmetric(horizontal: 90),
+                  color: Colors.black,
+                  child: Text("Create Account"),
+                  onPressed: () {
+                    createAccount();
+                    // Timer(
+                    //   Duration(seconds: 7),
+                    //   () {
+                    //     storeUserData();
+                    //   },
+                    // );
+                  }),
+            ],
+          ),
         ),
       ),
     );

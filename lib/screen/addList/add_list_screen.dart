@@ -88,7 +88,7 @@ class _AddListScreenState extends State<AddListScreen> {
                   children: [
                     Row(
                       children: [
-                        Container(
+                        SizedBox(
                           // color: Colors.amber,
                           width: MediaQuery.of(context).size.width * .5,
                           child: TextField(
@@ -106,7 +106,7 @@ class _AddListScreenState extends State<AddListScreen> {
                     ),
                     Row(
                       children: [
-                        Container(
+                        SizedBox(
                             // color: Colors.amber,
                             width: MediaQuery.of(context).size.width * .5,
                             child: TextField(
