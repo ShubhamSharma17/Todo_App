@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:todo_app/helper/color.dart';
 import 'package:todo_app/helper/ui_helper.dart';
 import 'package:todo_app/models/user_model.dart';
+import 'package:todo_app/screens/home.dart';
 
 class SignUpPage extends StatefulWidget {
   const SignUpPage({super.key});
@@ -63,8 +64,18 @@ class _SignUpPageState extends State<SignUpPage> {
       );
       await FirebaseFirestore.instance
           .collection("user")
-          .doc(nameController.text + uid)
-          .set(userModel.toMap());
+          .doc(uid)
+          .set(userModel.toMap())
+          .then((value) {
+        Navigator.popUntil(context, (route) {
+          return route.isFirst;
+        });
+        Navigator.pushReplacement(context,
+            CupertinoPageRoute(builder: (context) {
+          return HomeScreen();
+        }));
+      });
+
       log("user has been creadted!");
     }
   }
