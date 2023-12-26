@@ -72,7 +72,10 @@ class _SignUpPageState extends State<SignUpPage> {
         });
         Navigator.pushReplacement(context,
             CupertinoPageRoute(builder: (context) {
-          return HomeScreen();
+          return HomeScreen(
+            user: userModel,
+            firebaseUser: userCredential!.user!,
+          );
         }));
       });
 

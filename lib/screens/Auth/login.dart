@@ -55,7 +55,10 @@ class _LoginScreenState extends State<LoginScreen> {
       if (!context.mounted) return;
       Navigator.popUntil(context, (route) => route.isFirst);
       Navigator.pushReplacement(context, CupertinoPageRoute(builder: (context) {
-        return HomeScreen();
+        return HomeScreen(
+          firebaseUser: userCredential!.user!,
+          user: user,
+        );
       }));
     }
   }
