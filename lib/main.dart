@@ -5,7 +5,9 @@ import 'package:todo_app/helper/firebase_helper.dart';
 import 'package:todo_app/models/user_model.dart';
 import 'package:todo_app/screens/Auth/login.dart';
 import 'package:todo_app/screens/home.dart';
+import 'package:uuid/uuid.dart';
 
+var uuid = const Uuid();
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();

@@ -61,6 +61,7 @@ class _SignUpPageState extends State<SignUpPage> {
         name: nameController.text,
         uid: uid,
         phoneNumber: phoneController.text,
+        noteID: "",
       );
       await FirebaseFirestore.instance
           .collection("user")
