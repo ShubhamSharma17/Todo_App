@@ -27,6 +27,7 @@ class TODOScreen extends StatefulWidget {
 class _TODOScreenState extends State<TODOScreen> {
   TextEditingController taskController = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
+
   // method for upload notes in firebase
   void uploadNotes(String notes, String description) {
     String tempNoteID = uuid.v1();
@@ -58,9 +59,6 @@ class _TODOScreenState extends State<TODOScreen> {
       taskController.clear();
       descriptionController.clear();
     }
-
-    // FirebaseFirestore.instance
-    //     .collection("user").doc(widget.user.uid).
   }
 
   @override

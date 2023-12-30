@@ -40,6 +40,18 @@ class _HomeScreenState extends State<HomeScreen> {
     // });
   }
 
+  // fuction for delete task
+  void deleteTask(String userId, String taskId) {
+    // if(FirebaseFirestore.instance.collection("notes").doc(userId).collection("allNotes").)
+    FirebaseFirestore.instance
+        .collection("notes")
+        .doc(userId)
+        .collection("allNotes")
+        .doc(taskId)
+        .delete();
+    log("task successfully deleted");
+  }
+
   @override
   void dispose() {
     super.dispose();
@@ -53,6 +65,11 @@ class _HomeScreenState extends State<HomeScreen> {
       child: Scaffold(
         appBar: AppBar(
           backgroundColor: purpleCF9FFF,
+          title: Text(widget.user.name!),
+          titleTextStyle: const TextStyle(
+            fontSize: 20,
+            color: black,
+          ),
           actions: [
             IconButton(
                 onPressed: () {
@@ -105,15 +122,10 @@ class _HomeScreenState extends State<HomeScreen> {
                               ),
                               trailing: InkWell(
                                 onTap: () {
-                                  FirebaseFirestore.instance
-                                      .collection("notes")
-                                      .doc(widget.user.uid)
-                                      .collection("allNotes")
-                                      .doc(notesModel.noteID)
-                                      .delete();
-                                  log("task successfully deleted");
+                                  deleteTask(
+                                      widget.user.uid!, notesModel.noteID!);
                                 },
-                                child: Icon(Icons.delete),
+                                child: const Icon(Icons.delete),
                               ),
                             ),
                           ),
