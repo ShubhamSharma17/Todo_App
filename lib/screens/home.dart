@@ -10,6 +10,7 @@ import 'package:todo_app/helper/ui_helper.dart';
 import 'package:todo_app/models/note_model.dart';
 import 'package:todo_app/models/user_model.dart';
 import 'package:todo_app/screens/Auth/login.dart';
+import 'package:todo_app/screens/check_todo_task.dart';
 import 'package:todo_app/screens/notification/notification_services.dart';
 import 'package:todo_app/screens/todo_screen.dart';
 
@@ -80,7 +81,10 @@ class _HomeScreenState extends State<HomeScreen> {
                     return const LoginScreen();
                   }));
                 },
-                icon: const Icon(Icons.exit_to_app))
+                icon: const Icon(
+                  Icons.exit_to_app,
+                  color: white,
+                ))
           ],
         ),
         body: Container(
@@ -111,7 +115,16 @@ class _HomeScreenState extends State<HomeScreen> {
                               borderRadius: BorderRadius.circular(20),
                             ),
                             child: ListTile(
-                              onTap: () {},
+                              onTap: () {
+                                Navigator.push(context, CupertinoPageRoute(
+                                  builder: (context) {
+                                    return CheckTodoTaskScreen(
+                                        user: widget.user,
+                                        firebaseUser: widget.firebaseUser,
+                                        notes: notesModel);
+                                  },
+                                ));
+                              },
                               title: Text(
                                 notesModel.notes.toString(),
                                 style: const TextStyle(color: black),
@@ -125,7 +138,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                   deleteTask(
                                       widget.user.uid!, notesModel.noteID!);
                                 },
-                                child: const Icon(Icons.delete),
+                                child: const Icon(
+                                  Icons.delete,
+                                  color: white,
+                                ),
                               ),
                             ),
                           ),
@@ -149,8 +165,11 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ),
         floatingActionButton: IconButton(
+          color: white,
+          style: const ButtonStyle(
+            backgroundColor: MaterialStatePropertyAll(purpleCF9FFF),
+          ),
           onPressed: () {
-            // dispose();
             Navigator.push(context, CupertinoPageRoute(
               builder: (context) {
                 return TODOScreen(
@@ -160,11 +179,9 @@ class _HomeScreenState extends State<HomeScreen> {
               },
             ));
           },
-          //   log("Pressed....");
-          //   notificationScerviceClass.sendNotification(
-          //       "Testing", "notification testing...");
-          // },
-          icon: const Icon(Icons.send),
+          icon: const Icon(
+            Icons.add,
+          ),
         ),
       ),
     );

@@ -77,6 +77,7 @@ class _TODOScreenState extends State<TODOScreen> {
                 SizedBox(
                   width: MediaQuery.of(context).size.width,
                   child: TextField(
+                    keyboardType: TextInputType.visiblePassword,
                     controller: taskController,
                     decoration: InputDecoration(
                       labelText: 'Enter Notes',
@@ -93,6 +94,7 @@ class _TODOScreenState extends State<TODOScreen> {
                   width: MediaQuery.of(context).size.width,
                   child: TextField(
                     controller: descriptionController,
+                    keyboardType: TextInputType.visiblePassword,
                     decoration: InputDecoration(
                       labelText: 'Enter Description',
                       hintText: "Enter Your Descreption here...",
@@ -106,12 +108,11 @@ class _TODOScreenState extends State<TODOScreen> {
                 verticalSpacesLarge,
                 CupertinoButton(
                   padding: const EdgeInsets.symmetric(horizontal: 12),
-                  color: Colors.green,
+                  color: purpleCF9FFF,
                   child: const Text(
                     "Upload Task",
                     style: TextStyle(
                       color: black,
-                      fontWeight: FontWeight.w500,
                       fontSize: 21,
                     ),
                   ),

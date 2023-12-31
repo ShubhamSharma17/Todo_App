@@ -2,9 +2,9 @@ import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:todo_app/helper/color.dart';
 import 'package:todo_app/helper/ui_helper.dart';
 import 'package:todo_app/models/user_model.dart';
@@ -21,6 +21,7 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
+  bool show = false;
 
   // method for check value
   void checkValue() {
@@ -69,6 +70,13 @@ class _LoginScreenState extends State<LoginScreen> {
       child: Scaffold(
         appBar: AppBar(
           backgroundColor: purpleCF9FFF,
+          title: const Text("To-Do App"),
+          titleTextStyle: const TextStyle(
+            fontWeight: FontWeight.w500,
+            fontSize: 25,
+            color: black,
+          ),
+          centerTitle: true,
         ),
         body: Container(
           padding: const EdgeInsets.symmetric(
@@ -91,6 +99,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   // for email address
                   TextFormField(
                     controller: emailController,
+                    keyboardType: TextInputType.emailAddress,
                     decoration: InputDecoration(
                       labelText: "Enter Email",
                       hintText: "Enter Your Email Address",
@@ -103,11 +112,34 @@ class _LoginScreenState extends State<LoginScreen> {
                   // for password
                   TextFormField(
                     controller: passwordController,
+                    keyboardType: TextInputType.visiblePassword,
+                    obscureText: show ? true : false,
                     decoration: InputDecoration(
                       labelText: "Enter Password",
                       hintText: "Enter Your Password",
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
+                      ),
+                      prefixIcon: IconButton(
+                        onPressed: () {
+                          setState(() {
+                            if (show) {
+                              show = false;
+                            } else {
+                              show = true;
+                            }
+                          });
+                        },
+                        icon: show
+                            ? const Icon(
+                                FontAwesomeIcons.solidEyeSlash,
+                                color: purpleCF9FFF,
+                                size: 18,
+                              )
+                            : const Icon(
+                                Icons.remove_red_eye_rounded,
+                                color: purpleCF9FFF,
+                              ),
                       ),
                     ),
                   ),
@@ -152,6 +184,8 @@ class _LoginScreenState extends State<LoginScreen> {
                   onPressed: () {
                     Navigator.push(context, CupertinoPageRoute(
                       builder: (context) {
+                        emailController.clear();
+                        passwordController.clear();
                         return const SignUpPage();
                       },
                     ));

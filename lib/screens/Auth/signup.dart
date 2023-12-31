@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:todo_app/helper/color.dart';
 import 'package:todo_app/helper/ui_helper.dart';
 import 'package:todo_app/models/user_model.dart';
@@ -21,6 +22,7 @@ class _SignUpPageState extends State<SignUpPage> {
   TextEditingController phoneController = TextEditingController();
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
+  bool show = false;
 
   // method for checking values
   void checkValue() {
@@ -109,9 +111,12 @@ class _SignUpPageState extends State<SignUpPage> {
                   // for name
                   TextFormField(
                     controller: nameController,
-                    keyboardType: TextInputType.name,
+                    keyboardType: TextInputType.visiblePassword,
                     decoration: InputDecoration(
-                      prefixIcon: const Icon(Icons.person),
+                      prefixIcon: const Icon(
+                        Icons.person,
+                        color: purpleCF9FFF,
+                      ),
                       labelText: "Enter name",
                       hintText: "Enter your full name",
                       border: OutlineInputBorder(
@@ -124,13 +129,17 @@ class _SignUpPageState extends State<SignUpPage> {
                   TextFormField(
                     controller: phoneController,
                     keyboardType: TextInputType.phone,
+                    maxLength: 10,
                     decoration: InputDecoration(
                       labelText: "Enter Phone Number",
                       hintText: "Enter your Phone Number",
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
                       ),
-                      prefixIcon: const Icon(Icons.phone),
+                      prefixIcon: const Icon(
+                        Icons.phone,
+                        color: purpleCF9FFF,
+                      ),
                     ),
                   ),
                   verticalSpaceMedium,
@@ -144,7 +153,10 @@ class _SignUpPageState extends State<SignUpPage> {
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
                       ),
-                      prefixIcon: const Icon(Icons.email),
+                      prefixIcon: const Icon(
+                        Icons.email,
+                        color: purpleCF9FFF,
+                      ),
                     ),
                   ),
                   verticalSpaceMedium,
@@ -152,13 +164,34 @@ class _SignUpPageState extends State<SignUpPage> {
                   TextFormField(
                     controller: passwordController,
                     keyboardType: TextInputType.text,
+                    obscureText: show ? false : true,
                     decoration: InputDecoration(
                       labelText: "Enter password",
                       hintText: "Enter your password",
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
                       ),
-                      prefixIcon: const Icon(Icons.remove_red_eye),
+                      prefixIcon: IconButton(
+                        onPressed: () {
+                          setState(() {
+                            if (show) {
+                              show = false;
+                            } else {
+                              show = true;
+                            }
+                          });
+                        },
+                        icon: show
+                            ? const Icon(
+                                FontAwesomeIcons.solidEyeSlash,
+                                color: purpleCF9FFF,
+                                size: 18,
+                              )
+                            : const Icon(
+                                Icons.remove_red_eye_rounded,
+                                color: purpleCF9FFF,
+                              ),
+                      ),
                     ),
                   ),
                   verticalSpacesLarge,
