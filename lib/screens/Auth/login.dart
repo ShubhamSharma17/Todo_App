@@ -182,10 +182,10 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                   ),
                   onPressed: () {
+                    emailController.clear();
+                    passwordController.clear();
                     Navigator.push(context, CupertinoPageRoute(
                       builder: (context) {
-                        emailController.clear();
-                        passwordController.clear();
                         return const SignUpPage();
                       },
                     ));
