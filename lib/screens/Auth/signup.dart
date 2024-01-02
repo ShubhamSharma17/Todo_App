@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -6,6 +8,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:todo_app/helper/color.dart';
+import 'package:todo_app/helper/dialog.dart';
 import 'package:todo_app/helper/ui_helper.dart';
 import 'package:todo_app/models/user_model.dart';
 import 'package:todo_app/screens/home.dart';
@@ -32,12 +35,32 @@ class _SignUpPageState extends State<SignUpPage> {
     String password = passwordController.text.toString();
 
     if (name == "") {
+      UIHelper.showAlertDialog(
+        context,
+        "Credential Incorrect",
+        "Email can't be empty",
+      );
       log("Name can't be empty");
     } else if (phoneNumber == "") {
+      UIHelper.showAlertDialog(
+        context,
+        "Credential Incorrect",
+        "Phone Number can't be empty",
+      );
       log("Phone can't be empty");
     } else if (email == "") {
+      UIHelper.showAlertDialog(
+        context,
+        "Credential Incorrect",
+        "Email can't be empty",
+      );
       log("email can't be empty");
     } else if (password == "") {
+      UIHelper.showAlertDialog(
+        context,
+        "Credential Incorrect",
+        "Password can't be empty",
+      );
       log("password can't be empty");
     } else {
       signUp(email, password);
@@ -47,6 +70,7 @@ class _SignUpPageState extends State<SignUpPage> {
   // method for sign up
   void signUp(String email, String password) async {
     UserCredential? userCredential;
+    UIHelper.showLoadingDialog(context, "Signing Up...");
     try {
       userCredential =
           await FirebaseAuth.instance.createUserWithEmailAndPassword(
@@ -54,6 +78,8 @@ class _SignUpPageState extends State<SignUpPage> {
         password: password,
       );
     } on FirebaseException catch (error) {
+      Navigator.pop(context);
+      UIHelper.showLoadingDialog(context, error.code.toString());
       log(error.code.toString());
     }
     if (userCredential != null) {

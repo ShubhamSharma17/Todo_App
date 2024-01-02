@@ -6,6 +6,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:todo_app/helper/color.dart';
+import 'package:todo_app/helper/dialog.dart';
 import 'package:todo_app/helper/ui_helper.dart';
 import 'package:todo_app/models/note_model.dart';
 import 'package:todo_app/models/user_model.dart';
@@ -43,22 +44,23 @@ class _HomeScreenState extends State<HomeScreen> {
 
   // fuction for delete task
   void deleteTask(String userId, String taskId) {
-    // if(FirebaseFirestore.instance.collection("notes").doc(userId).collection("allNotes").)
     FirebaseFirestore.instance
         .collection("notes")
         .doc(userId)
         .collection("allNotes")
         .doc(taskId)
         .delete();
+    UIHelper.showAlertDialog(
+        context, "Task Complete", "task successfully deleted");
     log("task successfully deleted");
   }
 
-  @override
-  void dispose() {
-    super.dispose();
-    log("ab function call nhi hoga.....");
-    timer?.cancel();
-  }
+  // @override
+  // void dispose() {
+  //   super.dispose();
+  //   log("ab function call nhi hoga.....");
+  //   timer?.cancel();
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -74,6 +76,7 @@ class _HomeScreenState extends State<HomeScreen> {
           actions: [
             IconButton(
                 onPressed: () {
+                  UIHelper.showLoadingDialog(context, "Sign Out..");
                   FirebaseAuth.instance.signOut();
                   Navigator.popUntil(context, (route) => route.isFirst);
                   Navigator.pushReplacement(context,

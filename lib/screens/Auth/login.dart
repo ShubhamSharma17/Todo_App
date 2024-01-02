@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -6,6 +8,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:todo_app/helper/color.dart';
+import 'package:todo_app/helper/dialog.dart';
 import 'package:todo_app/helper/ui_helper.dart';
 import 'package:todo_app/models/user_model.dart';
 import 'package:todo_app/screens/Auth/signup.dart';
@@ -29,8 +32,18 @@ class _LoginScreenState extends State<LoginScreen> {
     String password = passwordController.text.toString();
 
     if (email == "") {
+      UIHelper.showAlertDialog(
+        context,
+        "Credential Incorrect",
+        "Email can't be empty",
+      );
       log("Email can't be empty");
     } else if (password == "") {
+      UIHelper.showAlertDialog(
+        context,
+        "Credential Incorrect",
+        "Password can't be empty",
+      );
       log("password can't be empty");
     } else {
       login(email, password);
@@ -40,10 +53,14 @@ class _LoginScreenState extends State<LoginScreen> {
   // method for login....
   void login(String email, String password) async {
     UserCredential? userCredential;
+    UIHelper.showLoadingDialog(context, "LogIn...");
     try {
       userCredential = await FirebaseAuth.instance
           .signInWithEmailAndPassword(email: email, password: password);
     } on FirebaseException catch (error) {
+      Navigator.pop(context);
+      UIHelper.showAlertDialog(
+          context, "Something went wrong", error.code.toString());
       log(error.code.toString());
     }
     if (userCredential != null) {
@@ -113,7 +130,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   TextFormField(
                     controller: passwordController,
                     keyboardType: TextInputType.visiblePassword,
-                    obscureText: show ? true : false,
+                    obscureText: show ? false : true,
                     decoration: InputDecoration(
                       labelText: "Enter Password",
                       hintText: "Enter Your Password",
