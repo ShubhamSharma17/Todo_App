@@ -29,7 +29,7 @@ class _CheckTodoTaskScreenState extends State<CheckTodoTaskScreen> {
         appBar: AppBar(
           backgroundColor: purpleCF9FFF,
           title: Text(
-            "Created on ${widget.notes.date!.toString().substring(0, 9)}",
+            "Created on ${widget.notes.date!.toString().substring(0, 10)}",
           ),
           titleTextStyle: const TextStyle(
             fontWeight: FontWeight.bold,
